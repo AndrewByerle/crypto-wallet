@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_wallet/net/api_methods.dart';
 import 'package:crypto_wallet/net/flutterfire.dart';
@@ -61,6 +63,8 @@ class _HomeViewState extends State<HomeView> {
 
                 return Stack(
                   children: [
+                    HomeBackground(
+                        bitcoin: bitcoin, tether: tether, ethereum: ethereum),
                     ListView(
                       children: snapshot.data!.docs.map((document) {
                         return Padding(
@@ -76,6 +80,7 @@ class _HomeViewState extends State<HomeView> {
                               children: [
                                 const SizedBox(width: 5.0),
                                 Text(
+                                  // limit to 2 decimal places
                                   "${document.get('Amount').toStringAsFixed(2)} ${document.id}",
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 18.0),
@@ -96,25 +101,6 @@ class _HomeViewState extends State<HomeView> {
                         );
                       }).toList(),
                     ),
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '1 bitcoin: \$' + bitcoin.toString(),
-                            style: TextStyle(fontSize: 18.0, color: Colors.red),
-                          ),
-                          Text(
-                            '1 ethereum: \$' + ethereum.toString(),
-                            style: TextStyle(fontSize: 18.0, color: Colors.red),
-                          ),
-                          Text(
-                            '1 tether: \$' + tether.toString(),
-                            style: TextStyle(fontSize: 18.0, color: Colors.red),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 );
               }),
@@ -131,6 +117,98 @@ class _HomeViewState extends State<HomeView> {
           color: Colors.white,
         ),
         backgroundColor: Colors.blue,
+      ),
+    );
+  }
+}
+
+class HomeBackground extends StatelessWidget {
+  const HomeBackground({
+    Key? key,
+    required this.bitcoin,
+    required this.tether,
+    required this.ethereum,
+  }) : super(key: key);
+
+  final double bitcoin;
+  final double tether;
+  final double ethereum;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          child: Container(
+            width: MediaQuery.of(context).size.width / 1.1,
+            decoration: BoxDecoration(
+                color: Colors.lightBlue.shade200.withOpacity(0.5)),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          '1 Bitcoin:',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        Text(
+                          '\$${bitcoin.toString()}',
+                          style: const TextStyle(
+                              fontSize: 20.0, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          '1 Tether:',
+                          style:
+                              TextStyle(fontSize: 20.0, color: Colors.black54),
+                        ),
+                        Text(
+                          '\$${tether.toString()}',
+                          style: const TextStyle(
+                              fontSize: 20.0, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          '1 Ethereum:',
+                          style:
+                              TextStyle(fontSize: 20.0, color: Colors.black54),
+                        ),
+                        Text(
+                          '\$${ethereum.toString()}',
+                          style: const TextStyle(
+                              fontSize: 20.0, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

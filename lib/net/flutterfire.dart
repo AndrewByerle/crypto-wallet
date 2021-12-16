@@ -51,6 +51,7 @@ Future<bool> addCoin(String id, String amount) async {
         return true;
       }
       double newAmount = value + snapshot.get('Amount');
+      print('creating new amount' + newAmount.toString());
       transaction.update(documentReference, {'Amount': newAmount});
       return true;
     });

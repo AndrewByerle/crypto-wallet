@@ -60,7 +60,7 @@ class _AddViewState extends State<AddView> {
             child: MaterialButton(
               onPressed: () async {
                 // pop removes the material widget from the screen and go back to original screen
-                addCoin(dropdownValue, _amountController.text);
+                await addCoin(dropdownValue, _amountController.text);
                 Navigator.of(context).pop();
               },
               child: Text("Add"),
